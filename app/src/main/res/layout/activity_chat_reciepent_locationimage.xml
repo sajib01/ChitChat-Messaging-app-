@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.sajib.chitchat.viewmodel.Chat_recipient_location_viewmodel"></variable>
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/reciepent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_height="130dp"
+            app:cardCornerRadius="2dp"
+            app:cardBackgroundColor="#FF94CDF9">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="110dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="3dp"
+            app:setbitmap="@{viewmodel.Reciepent}" />
+            <TextView
+                android:textSize="12sp"
+                android:width="40dp"
+                android:layout_gravity="bottom|end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:text="@{viewmodel.RecipientText}"
+                />
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+</layout>

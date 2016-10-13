@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#66BB6A</color>
+    <color name="colorStatus">#9FA8DA</color>
+    <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorAccent">#000000</color>
+    <color name="tabsScrollColor">#ffffff</color>
+    <color name="Teal">#009688</color>
+    <color name="Deeporange">#FF5722</color>
+    <color name="ash">#fafafa</color>
+    <color name="com_facebook_button_background_color_focused_disabled">#415dae</color>
+    <color name="com_facebook_button_background_color_disabled">#415dae</color>
+    <color name="com_facebook_button_background_color_focused">#2f477a</color>
+    <color name="com_facebook_button_border_color_focused">#2f477a</color>
+    <color name="com_facebook_button_background_color_pressed">#2f477a</color>
+    <color name="com_facebook_button_background_color">#415dae</color>
+</resources>

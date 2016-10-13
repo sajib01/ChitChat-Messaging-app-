@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.sajib.chitchat.viewmodel.Chat_sender_Viewmodel"></variable>
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/sender"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/sender"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                >
+            <TextView
+                android:id="@+id/one"
+                android:layout_gravity="top"
+                android:minWidth="40dp"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_height="wrap_content"
+                android:text="sajib halder ddfdf"
+                app:text="@{viewmodel.Sender}"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:text="15:45"
+                android:textSize="10sp"
+                android:layout_alignEnd="@+id/one"
+                android:layout_below="@+id/one"
+                app:text="@{viewmodel.SenderTime}"
+                />
+            </RelativeLayout>
+    </RelativeLayout>
+</layout>

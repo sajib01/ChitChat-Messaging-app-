@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.sajib.chitchat.viewmodel.DirectionMap_Viewmodel"></variable>
+    </data>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="140dp"
+        android:layout_height="80dp"
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/cardview_light_background"
+        app:cardElevation="8dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:textColor="#ed1a1a"
+            app:text="@{viewmodel.setTravelTime}"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="distance"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:textColor="#ed1a1a"
+            app:text="@{viewmodel.setDistance}"
+            />
+    </android.support.v7.widget.CardView>
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapd"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.sajib.chitchat.activity.MapsActivity" />
+
+</FrameLayout>
+</layout>
