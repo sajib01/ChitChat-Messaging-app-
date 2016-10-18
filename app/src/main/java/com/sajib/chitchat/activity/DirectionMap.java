@@ -68,21 +68,18 @@ import rx.schedulers.Schedulers;
 public class DirectionMap extends FragmentActivity implements OnMapReadyCallback ,GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,LocationListener{
     private static final String TAG = "DirectionMap";
     private GoogleMap mMap;
-    double latitude;
-    double longitude;
-    String Sender;
-    String recipient;
+    private double latitude;
+    private double longitude;
+    private String Sender;
+    private String recipient;
 
-    String senderName;
-    String recipientName;
-
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistner;
-    DirectionmapBinding directionmapBinding;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    android.location.Location mLastLocation;
-    Donetworkcall donetworkcall;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistner;
+    private DirectionmapBinding directionmapBinding;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private android.location.Location mLastLocation;
+    private Donetworkcall donetworkcall;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +115,6 @@ public class DirectionMap extends FragmentActivity implements OnMapReadyCallback
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        Log.d("skcc",senderName+"--"+recipientName);
 
         DirectionMap_Viewmodel map_viewmodel=new DirectionMap_Viewmodel(this,firebaseAuth,mAuthlistner,latitude,longitude,Sender,recipient);
 

@@ -15,8 +15,8 @@ import java.util.Date;
  * Created by sajib on 11-08-2016.
  */
 public class Chat_sender_Viewmodel extends BaseObservable{
-    Context context;
-    Message data;
+    private Context context;
+    private Message data;
     public Chat_sender_Viewmodel(Context context, Message message) {
         this.context=context;
         this.data=message;

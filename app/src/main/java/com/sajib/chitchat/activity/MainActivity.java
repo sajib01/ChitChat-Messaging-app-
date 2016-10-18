@@ -16,14 +16,9 @@ import com.sajib.chitchat.viewmodel.MainViewmodel;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
-    ActivityMainBinding mainBinding;
+    private ActivityMainBinding mainBinding;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthlistner;
-    SharedPreferences sharedPreferences;
-    private final String sharedPref="Mylogin";
-    public MainActivity() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

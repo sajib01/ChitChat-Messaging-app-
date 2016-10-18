@@ -5,10 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,7 +13,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +22,7 @@ import java.util.Map;
 
 public class LocationService extends Service {
 
-    public static final int TWO_MINUTES = 10000; // 120 seconds
+    public static final int TEN_SECONDS = 10000; // 120 seconds
     private static final String TAG ="LocationService" ;
     public static Boolean isRunning = false;
 
@@ -59,7 +54,7 @@ public class LocationService extends Service {
             if (!isRunning) {
                 startListening();
             }
-            mHandler.postDelayed(mHandlerTask, TWO_MINUTES);
+            mHandler.postDelayed(mHandlerTask, TEN_SECONDS);
         }
     };
 
@@ -174,8 +169,8 @@ public class LocationUpdaterListener implements LocationListener
 
         // Check whether the new location fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDelta > TEN_SECONDS;
+        boolean isSignificantlyOlder = timeDelta < -TEN_SECONDS;
         boolean isNewer = timeDelta > 0;
 
         // If it's been more than two minutes since the current location, use the new location
@@ -191,7 +186,7 @@ public class LocationUpdaterListener implements LocationListener
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 100;
 
         // Check if the old and new location are from the same provider
         boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());

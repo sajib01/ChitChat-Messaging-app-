@@ -15,15 +15,40 @@
         android:layout_width="match_parent"
         android:background="@color/colorPrimary"
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:elevation="4dp"
         android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile"
+            android:layout_width="40dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#198304"
+            android:src="@drawable/avatar_2"
+            android:layout_height="40dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="sajib"
+            android:padding="4dp"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             />
+        <TextView
+            android:id="@+id/typing"
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="typing"
+            android:textColor="@android:color/white"
+            android:textStyle="italic"
+            android:textSize="12sp"
+            />
+        </LinearLayout>
         <TextView
             android:id="@+id/status"
             android:layout_width="match_parent"

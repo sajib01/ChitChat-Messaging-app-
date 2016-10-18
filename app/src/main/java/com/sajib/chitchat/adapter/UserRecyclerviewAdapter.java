@@ -29,14 +29,15 @@ import java.util.Locale;
  * Created by sajib on 10-08-2016.
  */
 public class UserRecyclerviewAdapter extends RecyclerView.Adapter<UserRecyclerviewAdapter.MyViewholder> {
-    List<User> data = Collections.emptyList();
-    Context context;
-    int position;
-    boolean hasdata;
-    String uid;
-    String sender;
-    User currentuser;
-    OnItemClickListner onItemClickListner;
+    private List<User> data = Collections.emptyList();
+    private Context context;
+    private int position;
+    private boolean hasdata;
+    private String uid;
+    private String sender;
+    private User currentuser;
+    private OnItemClickListner onItemClickListner;
+
     public UserRecyclerviewAdapter(Context context, String uid, OnItemClickListner onItemClickListner, String email) {
         data = new ArrayList<>();
         this.context = context;

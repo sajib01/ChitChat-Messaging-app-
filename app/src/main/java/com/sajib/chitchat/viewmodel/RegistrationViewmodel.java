@@ -35,27 +35,27 @@ import java.util.Map;
  * Created by sajib on 09-08-2016.
  */
 public class RegistrationViewmodel implements Avatar_recyclerviewAdapter.GetData{
-    Context context;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistener;
-    RegistrationActivity registrationActivity;
-    ActivityRegistrationBinding mBinding;
+    private Context context;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistener;
+    private RegistrationActivity registrationActivity;
+    private ActivityRegistrationBinding mBinding;
     public ObservableField<Boolean> fullnameError=new ObservableField<>(true);
     public ObservableField<Boolean> emailError=new ObservableField<>(true);
     public ObservableField<Boolean> passwordError=new ObservableField<>(true);
     public ObservableField<String> Requirement=new ObservableField<>();
-    ArrayList<String> uid=new ArrayList<>();
-    String fullname;
-    String password;
-    String email;
-    int status=0;
-    int code=-1;
-    ProgressDialog progressDialog;
+    private ArrayList<String> uid=new ArrayList<>();
+    private String fullname;
+    private String password;
+    private String email;
+    private int code=-1;
+    private ProgressDialog progressDialog;
 
     public RegistrationViewmodel()
     {
 
     }
+
     public RegistrationViewmodel(Context context, FirebaseAuth firebaseAuth, FirebaseAuth.AuthStateListener mAuthlistner, RegistrationActivity registrationActivity, ActivityRegistrationBinding mBinding) {
         this.context = context;
         this.firebaseAuth = firebaseAuth;
@@ -99,6 +99,7 @@ public class RegistrationViewmodel implements Avatar_recyclerviewAdapter.GetData
             this.progressDialog=new ProgressDialog(context);
             this.progressDialog.setMessage("Registering user please wait...");
             this.progressDialog.getWindow().setGravity(Gravity.CENTER);
+            this.progressDialog.setCancelable(false);
             this.progressDialog.show();
             CreateAccount(email,password);
         }
@@ -230,7 +231,6 @@ public class RegistrationViewmodel implements Avatar_recyclerviewAdapter.GetData
                             users.put("provider",firebaseAuth.getCurrentUser().getProviderId());
                             users.put("creationtime", String.valueOf(calendar.getTime()));
                             users.put("Id",firebaseAuth.getCurrentUser().getUid());
-                            Log.d("hasd", String.valueOf(code));
 
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference myRef = database.getReference("User");

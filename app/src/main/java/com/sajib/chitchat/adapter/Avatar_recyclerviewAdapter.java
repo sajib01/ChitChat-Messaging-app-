@@ -23,11 +23,10 @@ import java.util.List;
 
 public class Avatar_recyclerviewAdapter extends RecyclerView.Adapter<Avatar_recyclerviewAdapter.Myviewholder>{
 
-
-    Context context;
-    List<Avatar> avatardata= Collections.emptyList();
-    boolean alreadyselected;
-    GetData data;
+    private Context context;
+    private List<Avatar> avatardata= Collections.emptyList();
+    private boolean alreadyselected;
+    private GetData data;
 
     public Avatar_recyclerviewAdapter(Context context, List<Avatar> avatardata,GetData data)
     {
@@ -50,10 +49,10 @@ public class Avatar_recyclerviewAdapter extends RecyclerView.Adapter<Avatar_recy
                 Toast.makeText(context,(holder.profileSelect.getVisibility()==View.VISIBLE)+"",Toast.LENGTH_SHORT).show();
                 if(holder.profileSelect.getVisibility()==View.INVISIBLE&&!alreadyselected)
                 {
-                    Log.d("fcdds", String.valueOf(avatar.getCode()));
                     holder.profileSelect.setVisibility(View.VISIBLE);
                     avatar.setSelected(true);
                     alreadyselected=true;
+
                     data.Displaydata(avatar.getCode());
                 }
                 else if(holder.profileSelect.getVisibility()==View.VISIBLE&&alreadyselected)

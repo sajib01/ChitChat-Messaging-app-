@@ -34,8 +34,8 @@ import java.util.List;
  * Created by sajib on 11-08-2016.
  */
 public class ChatRecyclerviewAdapter extends RecyclerView.Adapter<ChatRecyclerviewAdapter.Myviewholder> {
-    List<Message> data = Collections.emptyList();
-    Context context;
+    private List<Message> data = Collections.emptyList();
+    private Context context;
     private static final int SENDER=0;
     private static final int RECIPIENT=1;
     private static final int SENDERLocation=2;

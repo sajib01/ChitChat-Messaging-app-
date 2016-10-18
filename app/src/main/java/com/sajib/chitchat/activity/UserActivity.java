@@ -34,18 +34,15 @@ import com.sajib.chitchat.model.User;
 
 
 public class UserActivity extends AppCompatActivity implements UserRecyclerviewAdapter.OnItemClickListner{
-    ActivityUserBinding mBinding;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistner;
-    String userId;
-    DatabaseReference myRef;
-    ChildEventListener childEventListener;
-    DatabaseReference connectedRef;
-    ValueEventListener valueEventListener;
-    FirebaseUser user;
-    DatabaseReference Countref;
-    ValueEventListener Countvaluelistener;
-    String Recip;
+    private ActivityUserBinding mBinding;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistner;
+    private String userId;
+    private DatabaseReference myRef;
+    private ChildEventListener childEventListener;
+    private DatabaseReference connectedRef;
+    private ValueEventListener valueEventListener;
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +51,10 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
         setSupportActionBar(mBinding.toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-
-
         mBinding.progressBar.setVisibility(View.VISIBLE);
         mBinding.userlist.setVisibility(View.INVISIBLE);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("User");
+        myRef = FirebaseDatabase.getInstance().getReference("User");
 
         firebaseAuth = FirebaseAuth.getInstance();
         mAuthlistner = new FirebaseAuth.AuthStateListener() {
@@ -75,10 +69,25 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
             }
         };
 
-
-        CountChat();
-
         final UserRecyclerviewAdapter adapter=new UserRecyclerviewAdapter(this,firebaseAuth.getCurrentUser().getUid(),this,firebaseAuth.getCurrentUser().getEmail());
+
+        setUserisConnectedorNot();
+
+        mBinding.userlist.setLayoutManager(new LinearLayoutManager(this));
+
+        getUserdata(adapter);
+
+        firebaseAuth.addAuthStateListener(mAuthlistner);
+        connectedRef.addValueEventListener(valueEventListener);
+
+        mBinding.userlist.setAdapter(adapter);
+
+        myRef.addChildEventListener(childEventListener);
+
+
+    }
+
+    private void setUserisConnectedorNot() {
 
         connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
 
@@ -104,13 +113,13 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
 
             }
         };
+    }
 
-        mBinding.userlist.setLayoutManager(new LinearLayoutManager(this));
+    private void getUserdata(final UserRecyclerviewAdapter adapter) {
         childEventListener=new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 userId = dataSnapshot.getKey();
-                Log.d("fvvg",userId+user.getUid());
 
                 if (user!=null&&!userId.equals(user.getUid())) {
                     if (dataSnapshot.exists()) {
@@ -127,7 +136,6 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
                     if(dataSnapshot!=null)
                     {
                         User currentuser = dataSnapshot.getValue(User.class);
-                        Log.d("fcv",currentuser.getmName());
                         mBinding.toolbar.setTitle(currentuser.getmName());
                         adapter.setCurrentuserdata(currentuser);
                     }
@@ -164,20 +172,9 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
 
             }
         };
-        firebaseAuth.addAuthStateListener(mAuthlistner);
-        connectedRef.addValueEventListener(valueEventListener);
-
-        mBinding.userlist.setAdapter(adapter);
-
-        myRef.addChildEventListener(childEventListener);
-
-
     }
 
-    private void CountChat() {
 
-
-    }
 
 
     @Override
@@ -204,7 +201,6 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("jnm","destroy");
         if(mAuthlistner!=null)
         {
             firebaseAuth.removeAuthStateListener(mAuthlistner);
@@ -228,7 +224,7 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -239,11 +235,9 @@ public class UserActivity extends AppCompatActivity implements UserRecyclerviewA
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout) {
             myRef.removeEventListener(childEventListener);
             SharedPreferences sharedPreferences=getSharedPreferences("Mylogin",MODE_PRIVATE);
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-
             sharedPreferences.edit().clear().commit();
 
             firebaseAuth.signOut();

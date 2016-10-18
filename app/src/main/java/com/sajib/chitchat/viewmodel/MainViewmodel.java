@@ -36,20 +36,21 @@ import com.sajib.chitchat.databinding.ActivityMainBinding;
  * Created by sajib on 09-08-2016.
  */
 public class MainViewmodel{
-    Context context;
+    private Context context;
     public ObservableField<Boolean> emailRequired=new ObservableField<>(true);
     public ObservableField<Boolean> passwordRequired=new ObservableField<>(true);
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private static String TAG="MainViewmodel";
     private ActivityMainBinding mainBinding;
-    MainActivity mainActivity;
-    String email;
-    String password;
-    ProgressDialog progressDialog;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    private MainActivity mainActivity;
+    private String email;
+    private String password;
+    private ProgressDialog progressDialog;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private final String sharedPref="Mylogin";
+
     public MainViewmodel()
     {
 
@@ -126,6 +127,7 @@ public class MainViewmodel{
             this.progressDialog=new ProgressDialog(context);
             this.progressDialog.setMessage("Logging in...");
             this.progressDialog.getWindow().setGravity(Gravity.CENTER);
+            this.progressDialog.setCancelable(false);
             this.progressDialog.show();
             SigninAccount(email,password);
         }
@@ -179,10 +181,6 @@ public class MainViewmodel{
 
                     }
                 });
-    }
-
-    private void signOut() {
-        firebaseAuth.signOut();
     }
 
     public void hideKeyboard()

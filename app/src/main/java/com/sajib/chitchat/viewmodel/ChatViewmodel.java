@@ -33,19 +33,19 @@ public class ChatViewmodel implements MapsActivity.Mapsnap {
     public static final int RECIPIENT_STATUS = 1;
     public static final int SENDER_LOCATION_STATUS = 2;
     public static final int RECIPIENT_LOCATION_STATUS = 3;
-    Context context;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistner;
-    ActivityChatBinding chatBinding;
-    String Child;
-    String Sender;
-    String Reciepent;
-    SetRecyclerAdapter setrecycleradapter;
-    DatabaseReference myRef;
-    ChildEventListener mChild;
-    ChatRecyclerviewAdapter adapter;
-    String Sendername;
-    String Recipientname;
+    private Context context;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistner;
+    private ActivityChatBinding chatBinding;
+    private String Child;
+    private String Sender;
+    private String Reciepent;
+    private SetRecyclerAdapter setrecycleradapter;
+    private DatabaseReference myRef;
+    private ChildEventListener mChild;
+    private ChatRecyclerviewAdapter adapter;
+    private String Sendername;
+    private String Recipientname;
 
     public ChatViewmodel(ChatActivity chatActivity, final FirebaseAuth firebaseAuth, FirebaseAuth.AuthStateListener mAuthlistner, final ActivityChatBinding chatBinding, final DatabaseReference myRef, final SetRecyclerAdapter setrecycleradapter, final String child, final String sender, final String reciepent, final ChatRecyclerviewAdapter adapter) {
         this.context = chatActivity;
@@ -148,7 +148,7 @@ public class ChatViewmodel implements MapsActivity.Mapsnap {
     }
 
     @Override
-    public void readySnap(Double latitude, Double longitude, String child, final String sender, final String recipient, String Staticmapimage, String sendername) {
+    public void readySnap(Double latitude, Double longitude, String child, final String sender, final String recipient, String Staticmapimage, String sendername, long timestamp) {
         this.Child = child;
 
         final Map<String, String> message = new HashMap<>();

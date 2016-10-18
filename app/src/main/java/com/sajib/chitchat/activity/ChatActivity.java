@@ -25,26 +25,28 @@ import com.sajib.chitchat.adapter.ChatRecyclerviewAdapter;
 import com.sajib.chitchat.databinding.ActivityChatBinding;
 import com.sajib.chitchat.model.Message;
 import com.sajib.chitchat.model.NotificationModel;
+import com.sajib.chitchat.model.Typing;
 import com.sajib.chitchat.model.User;
 import com.sajib.chitchat.viewmodel.ChatViewmodel;
 
+import java.util.HashMap;
+
 public class ChatActivity extends AppCompatActivity implements ChatViewmodel.SetRecyclerAdapter{
     private ActivityChatBinding chatBinding;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistner;
-    ChatRecyclerviewAdapter adapter;
-    String Child;
-    String Sender;
-    String Reciepent;
-    DatabaseReference myRef;
-    ChatViewmodel chatViewmodel;
-    boolean isReached;
-    ValueEventListener notivalueeventlistner;
-    ValueEventListener statuseventlistner;
-    DatabaseReference databaseref;
-    DatabaseReference dref;
-    String Sendername;
-    String Recipientname;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistner;
+    private ChatRecyclerviewAdapter adapter;
+    private String Child;
+    private String Sender;
+    private String Reciepent;
+    private ChatViewmodel chatViewmodel;
+    private ValueEventListener notivalueeventlistner;
+    private ValueEventListener statuseventlistner;
+    private DatabaseReference databaseref;
+    private DatabaseReference dref;
+    private DatabaseReference Typingref;
+    private DatabaseReference checkTypingref;
+    private ValueEventListener checkTypingornot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +57,14 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
         Child=getIntent().getStringExtra("child");
         Sender=getIntent().getStringExtra("sender");
         Reciepent=getIntent().getStringExtra("reciepent");
+        chatBinding.typing.setText("");
 
         final TextView name= (TextView) findViewById(R.id.name);
         final TextView status= (TextView) findViewById(R.id.status);
 
-            FirebaseDatabase databasee=FirebaseDatabase.getInstance();
-            databaseref=databasee.getReference("Notification");
-            final NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        FirebaseDatabase databasee=FirebaseDatabase.getInstance();
+        databaseref=databasee.getReference("Notification");
+        final NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         notivalueeventlistner=new ValueEventListener() {
             @Override
@@ -81,10 +84,6 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
 
             }
         };
-
-
-
-
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -107,7 +106,8 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user=dataSnapshot.getValue(User.class);
-
+                int resources = getResources().getIdentifier("drawable/avatar_" + user.getmProfilecode(), null, getPackageName());
+                chatBinding.profile.setImageDrawable(ChatActivity.this.getResources().getDrawable(resources));
                 name.setText(user.getmName());
 
             }
@@ -118,7 +118,66 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
         });
 
 
+        HashMap<String,String> typing=new HashMap<>();
+        typing.put("setTyping","0");
+        typing.put("Sender",Sender);
+        typing.put("Recipient",Reciepent);
+        Typingref=FirebaseDatabase.getInstance().getReference("Typing");
+        Typingref.child(Sender).setValue(typing);
 
+
+        chatBinding.chatText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length()>0)
+                {
+                    Typingref.child(Sender).child("setTyping").setValue("1");
+                }
+                if(s.length()==0)
+                {
+                    Typingref.child(Sender).child("setTyping").setValue("0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        checkTypingref=FirebaseDatabase.getInstance().getReference("Typing");
+        checkTypingornot=new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                    Typing tping=snapshot.getValue(Typing.class);
+                    if(tping.getmSender().equals(Reciepent)&&tping.getmRecipient().equals(Sender))
+                    {
+                        if(tping.getmTyping().equals("0"))
+                        {
+                            chatBinding.typing.setText("");
+                        }
+                        if(tping.getmTyping().equals("1"))
+                        {
+                            chatBinding.typing.setText("typing...");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+
+        checkTypingref.addValueEventListener(checkTypingornot);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Chat");
@@ -176,6 +235,8 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
         chatViewmodel=new ChatViewmodel(this,firebaseAuth,mAuthlistner,chatBinding,myRef,this,Child,Sender,Reciepent,adapter);
         chatBinding.setViewmodel(chatViewmodel);
 
+
+
     }
 
     @Override
@@ -183,6 +244,7 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
         super.onStart();
         databaseref.addValueEventListener(notivalueeventlistner);
         dref.child(Reciepent).addValueEventListener(statuseventlistner);
+        checkTypingref.addValueEventListener(checkTypingornot);
 
     }
 
@@ -191,7 +253,10 @@ public class ChatActivity extends AppCompatActivity implements ChatViewmodel.Set
         super.onStop();
         databaseref.removeEventListener(notivalueeventlistner);
         dref.child(Reciepent).removeEventListener(statuseventlistner);
+        checkTypingref.removeEventListener(checkTypingornot);
+        Typingref.child(Sender).child("setTyping").setValue("0");
     }
+
 
     @Override
     public void setAdapterData(Message message) {

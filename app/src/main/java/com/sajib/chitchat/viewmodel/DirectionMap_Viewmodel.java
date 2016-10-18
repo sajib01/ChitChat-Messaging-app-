@@ -74,25 +74,25 @@ import rx.schedulers.Schedulers;
 public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
     public final ObservableField<String> setTravelTime = new ObservableField<>("Time:");
     public final ObservableField<String> setDistance = new ObservableField<>("Distance");
-    GoogleMap mMap;
-    Context context;
-    DRAWMAP drawmap;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistener;
-    Double CursorLat;
-    Double CursorLong;
-    DatabaseReference mRef;
-    PolylineOptions lineOptions = null;
-    PolylineOptions polylineOptions=null;
-    Double Originlatitude;
-    Double Originlongitude;
-    String Sender;
-    String recipient;
-    String senderName;
-    String recipientName;
-    ArrayList<LatLng> points = null;
-    ArrayList<LatLng> Travelpoint=null;
-    boolean fetched=false;
+    private GoogleMap mMap;
+    private Context context;
+    private DRAWMAP drawmap;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistener;
+    private Double CursorLat;
+    private Double CursorLong;
+    private DatabaseReference mRef;
+    private PolylineOptions lineOptions = null;
+    private PolylineOptions polylineOptions=null;
+    private Double Originlatitude;
+    private Double Originlongitude;
+    private String Sender;
+    private String recipient;
+    private String senderName;
+    private String recipientName;
+    private ArrayList<LatLng> points = null;
+    private ArrayList<LatLng> Travelpoint=null;
+    private boolean fetched=false;
 
     public DirectionMap_Viewmodel(DirectionMap directionMap, FirebaseAuth firebaseAuth, FirebaseAuth.AuthStateListener mAuthlistener, double latitude, double longitude, String sender, final String recipient) {
         this.context = directionMap;
@@ -151,13 +151,12 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("defss", String.valueOf(e));
+
                     }
 
                     @Override
                     public void onNext(DRAWMAP drawmap) {
                         DirectionMap_Viewmodel.this.drawmap = drawmap;
-                        Log.d("hbngg", String.valueOf(drawmap.getRoutes().size())+"orid"+Originlatitude+"dest"+Destinationlatitude);
                         List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String, String>>>();
                         /** Traversing all steps */
                         for (int i = 0; i < drawmap.getRoutes().size(); i++) {
@@ -199,22 +198,19 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
                             }
                             // Adding all the points in the route to LineOptions
                             lineOptions.addAll(points);
-                            lineOptions.width(10);
+                            lineOptions.width(15);
                             lineOptions.clickable(true);
                             lineOptions.color(Color.BLUE);
-                            lineOptions.geodesic(true);
 
 
                         }
                         LatLng location = new LatLng(Destinationlatitude, Destinationlongitude);
                         // Drawing polyline in the Google Map for the i-th route
                         mMap.addPolyline(lineOptions);
-                        Log.d("gvv", String.valueOf(points.size()));
-                        Log.d("scc",senderName+"--"+recipientName);
                         IconGenerator iconGenerator=new IconGenerator(context);
-                        iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
+                        iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
                         mMap.addMarker(new MarkerOptions()
-                                .position(location)
+                                .position(new LatLng(Destinationlatitude,Destinationlongitude))
                                 .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(recipientName))));
 
                     }
@@ -230,7 +226,6 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 com.sajib.chitchat.model.Location location = dataSnapshot.getValue(com.sajib.chitchat.model.Location.class);
-                Log.d("recio", dataSnapshot.getKey() + "--" + location.getmLat() + "--" + location.getmLong());
                 if (dataSnapshot.getKey().equals(Sender)) {
 
                     CursorLat = location.getmLat();
@@ -240,12 +235,13 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
                         mMap.addPolyline(lineOptions);
                     }
                     LatLng addedlocation = new LatLng(CursorLat, CursorLong);
+                    Travelpoint.add(addedlocation);
                     IconGenerator iconGenerator=new IconGenerator(context);
-                    iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
+                    iconGenerator.setStyle(IconGenerator.STYLE_BLUE);
                     mMap.addMarker(new MarkerOptions()
                             .position(addedlocation)
-                            .rotation(location.getMbearing().floatValue())
-                            .icon(BitmapDescriptorFactory.fromBitmap(getBitmap((VectorDrawable) ContextCompat.getDrawable(context,R.drawable.compass)))));
+                            .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(senderName))));
+
                 }
 
             }
@@ -264,17 +260,7 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
 
                     LatLng changelocation = new LatLng(CursorLat, CursorLong);
                     Travelpoint.add(changelocation);
-                    IconGenerator iconGenerator=new IconGenerator(context);
-                    iconGenerator.setStyle(IconGenerator.STYLE_ORANGE);
-                    mMap.addMarker(new MarkerOptions()
-                            .position(changelocation)
-                            .rotation(location.getMbearing().floatValue())
-                            .icon(BitmapDescriptorFactory.fromBitmap(getBitmap((VectorDrawable) ContextCompat.getDrawable(context,R.drawable.compass)))));
-                    polylineOptions.addAll(Travelpoint);
-                    polylineOptions.width(4);
-                    polylineOptions.clickable(true);
-                    polylineOptions.color(Color.BLACK);
-                    mMap.addPolyline(polylineOptions);
+                    redrawLine(changelocation,location);
                 }
             }
 
@@ -304,7 +290,6 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
             getLocationUpdateFromFirebase();
             fetched=true;
         }
-        Log.d("gv", String.valueOf(location.getLongitude()));
     }
 
     @Override
@@ -320,6 +305,25 @@ public class DirectionMap_Viewmodel implements DirectionMap.Donetworkcall {
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         vectorDrawable.draw(canvas);
         return bitmap;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void redrawLine(LatLng changelocation, com.sajib.chitchat.model.Location location){
+
+        mMap.clear();  //clears all Markers and Polylines
+
+        PolylineOptions options = new PolylineOptions().width(8).color(Color.GRAY).geodesic(true).clickable(true);
+        for (int i = 0; i < Travelpoint.size(); i++) {
+            LatLng point = Travelpoint.get(i);
+            options.add(point);
+        }
+        mMap.addMarker(new MarkerOptions()
+                .position(changelocation)
+                .title(senderName)
+                .rotation(location.getMbearing().floatValue())
+                .icon(BitmapDescriptorFactory.fromBitmap(getBitmap((VectorDrawable) ContextCompat.getDrawable(context,R.drawable.compass)))));
+        polylineOptions.addAll(Travelpoint);
+        mMap.addPolyline(options); //add Polyline
     }
 
 

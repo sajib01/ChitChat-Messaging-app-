@@ -61,18 +61,17 @@ import java.util.Calendar;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-    Mapsnap mapsnap;
-    String child;
-    String sender;
-    String recipient;
-    BottomSheetBehavior<View> bottomSheetBehavior;
-    CoordinatorLayout coordinatorLayout;
-    LocationManager locationManager;
-    android.location.Location mLastLocation;
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    int time;
-    String sendername;
+    private Mapsnap mapsnap;
+    private String child;
+    private String sender;
+    private String recipient;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
+    private CoordinatorLayout coordinatorLayout;
+    private android.location.Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private int time;
+    private String sendername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +145,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.Map_linear);
 
                     final CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) linearLayout.getLayoutParams();
-                    Log.d("gbh", displayMetrics.density + "--" + (layoutParams.MATCH_PARENT));
                     layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, layoutParams.MATCH_PARENT, getResources().getDisplayMetrics());
                     linearLayout.setLayoutParams(layoutParams);
                 }
@@ -229,8 +227,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void CaptureMapScreen(int time) {
         if (mLastLocation != null) {
             String Staticmappic = "https://maps.googleapis.com/maps/api/staticmap?center=" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + "&zoom=15&size=400x200&maptype=roadmap&markers=color:red%7C" + mMap.getMyLocation().getLatitude() + "," + mMap.getMyLocation().getLongitude() + "&key=" + Myapplication.MAP_IMAGE_KEY;
-
-            mapsnap.readySnap(mLastLocation.getLatitude(), mLastLocation.getLongitude(), child, sender, recipient, Staticmappic,sendername);
+            long timestamp=time*60*1000;
+            mapsnap.readySnap(mLastLocation.getLatitude(), mLastLocation.getLongitude(), child, sender, recipient, Staticmappic,sendername,timestamp);
 
             Intent intent = new Intent(MapsActivity.this, ChatActivity.class);
             intent.putExtra("child", child);
@@ -309,7 +307,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(mMap!=null) {
             mMap.clear();
             this.mLastLocation=location;
-            Log.d("hbnn",location.getLatitude()+"--"+location.getLongitude());
             LatLng mylocation = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(mylocation).draggable(true));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
@@ -318,6 +315,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public interface Mapsnap{
-        void readySnap(Double latitude, Double longitude, String child, String sender, String recipient, String Staticmapimage, String sendername);
+        void readySnap(Double latitude, Double longitude, String child, String sender, String recipient, String Staticmapimage, String sendername, long timestamp);
     }
 }

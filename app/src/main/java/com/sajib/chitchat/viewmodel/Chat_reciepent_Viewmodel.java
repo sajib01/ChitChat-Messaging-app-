@@ -14,8 +14,8 @@ import java.util.Date;
  * Created by sajib on 11-08-2016.
  */
 public class Chat_reciepent_Viewmodel extends BaseObservable{
-    Message data;
-    Context context;
+    private Message data;
+    private Context context;
     public Chat_reciepent_Viewmodel(Context context,Message message) {
         this.context=context;
         this.data=message;

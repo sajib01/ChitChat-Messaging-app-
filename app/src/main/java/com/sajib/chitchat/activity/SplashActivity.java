@@ -18,7 +18,7 @@ import com.sajib.chitchat.NotificationService;
 import com.sajib.chitchat.R;
 
 public class SplashActivity extends AppCompatActivity {
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private final String sharedPref="Mylogin";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

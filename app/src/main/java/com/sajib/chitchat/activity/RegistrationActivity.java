@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrationActivity extends AppCompatActivity {
-    ActivityRegistrationBinding mBinding;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthlistner;
+    private ActivityRegistrationBinding mBinding;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthlistner;
     private static String TAG="RegistrationActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

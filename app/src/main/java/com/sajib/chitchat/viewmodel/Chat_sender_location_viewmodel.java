@@ -18,8 +18,8 @@ import java.util.Date;
  * Created by sajib on 2/9/16.
  */
 public class Chat_sender_location_viewmodel extends BaseObservable {
-    Message data;
-    Context context;
+    private Message data;
+    private Context context;
     public Chat_sender_location_viewmodel(Context context, Message message) {
         this.context=context;
         this.data=message;
